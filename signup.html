@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up | TuneVibe</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to right, #840fc3, #2575fc);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .signup-container {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      max-width: 450px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .signup-container h2 {
+      color: #333;
+      margin-bottom: 1rem;
+    }
+
+    .music-icon {
+      font-size: 3rem;
+      color: #6a11cb;
+      margin-bottom: 1rem;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      margin: 0.5rem 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+      transition: 0.3s ease;
+    }
+
+    input:focus {
+      border-color: #6a11cb;
+      box-shadow: 0 0 5px #6a11cb50;
+    }
+
+    button {
+      margin-top: 1rem;
+      width: 100%;
+      padding: 0.8rem;
+      background-color: #6a11cb;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #5c0eb3;
+    }
+
+    .alt-option {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .alt-option a {
+      color: #6a11cb;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .flash-message {
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+      border-radius: 5px;
+      font-size: 0.9rem;
+    }
+    
+    .flash-success {
+      background: rgba(76, 175, 80, 0.2);
+      color: #4CAF50;
+      border: 1px solid #4CAF50;
+    }
+    
+    .flash-error {
+      background: rgba(244, 67, 54, 0.2);
+      color: #f44336;
+      border: 1px solid #f44336;
+    }
+
+    @media (max-width: 500px) {
+      .signup-container {
+        padding: 2rem 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="signup-container">
+    <div class="music-icon">🎵</div>
+    <h2>Create your TuneVibe Account</h2>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash-message flash-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    
+    <form action="/signup" method="POST">
+      <input type="text" id="username" name="username" placeholder="Username" required>
+      <input type="email" id="email" name="email" placeholder="Email Address" required>
+      <input type="password" id="password" name="password" placeholder="Password" required>
+      <button type="submit">Sign Up</button>
+    </form>
+    
+    <div class="alt-option">
+      Already have an account? <a href="/login">Log in</a>
+    </div>
+  </div>
+</body>
+</html>

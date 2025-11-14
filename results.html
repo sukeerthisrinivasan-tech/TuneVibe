@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Recommendations</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(to right, #2a0845, #6441a5);
+      color: white;
+      min-height: 100vh;
+    }
+    
+    header {
+      background: rgba(0, 0, 0, 0.4);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #9c27b0;
+    }
+    
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #ba68c8;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 2rem;
+    }
+    
+    h1 {
+      color: #ba68c8;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    
+    .context-info {
+      background: rgba(123, 31, 162, 0.2);
+      padding: 1.5rem;
+      border-radius: 10px;
+      margin-bottom: 2rem;
+      text-align: center;
+      backdrop-filter: blur(5px);
+      border: 1px solid #7e57c2;
+    }
+    
+    .context-info h2 {
+      margin-bottom: 0.5rem;
+      color: #d1c4e9;
+    }
+    
+    .weather-display {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1rem;
+      color: #b39ddb;
+    }
+    
+    .weather-icon {
+      font-size: 2rem;
+    }
+    
+    .song-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    .song-card {
+      background: rgba(46, 0, 79, 0.4);
+      padding: 1.5rem;
+      border-radius: 10px;
+      border: 1px solid #7e57c2;
+      transition: transform 0.3s ease;
+    }
+    
+    .song-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(156, 39, 176, 0.2);
+    }
+    
+    .song-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+      color: #ba68c8;
+    }
+    
+    .song-artist {
+      font-size: 1rem;
+      color: #d1c4e9;
+      margin-bottom: 0.5rem;
+    }
+    
+    .song-meta {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      align-items: center;
+      color: #b39ddb;
+    }
+    
+    .popularity-stars {
+      color: gold;
+      font-size: 1.2rem;
+      letter-spacing: 2px;
+    }
+    
+    .spotify-player {
+      width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 1rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      border: none;
+    }
+    
+    .back-btn {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: rgba(156, 39, 176, 0.2);
+      color: white;
+      text-decoration: none;
+      border-radius: 20px;
+      transition: all 0.3s;
+      border: 1px solid #9c27b0;
+    }
+    
+    .back-btn:hover {
+      background: rgba(156, 39, 176, 0.4);
+    }
+    
+    .feedback-buttons {
+      margin-top: 1rem;
+      display: flex;
+      gap: 1rem;
+    }
+    
+    .like-btn, .dislike-btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex: 1;
+    }
+    
+    .like-btn {
+      background-color: rgba(76, 175, 80, 0.2);
+      color: #4CAF50;
+      border: 1px solid #4CAF50;
+    }
+    
+    .like-btn:hover {
+      background-color: rgba(76, 175, 80, 0.4);
+    }
+    
+    .dislike-btn {
+      background-color: rgba(244, 67, 54, 0.2);
+      color: #f44336;
+      border: 1px solid #f44336;
+    }
+    
+    .dislike-btn:hover {
+      background-color: rgba(244, 67, 54, 0.4);
+    }
+    
+    footer {
+      text-align: center;
+      padding: 1rem;
+      margin-top: 2rem;
+      color: #b39ddb;
+      font-size: 0.9rem;
+    }
+    
+    @media (max-width: 600px) {
+      .container {
+        padding: 1rem;
+      }
+      
+      .song-card {
+        padding: 1rem;
+      }
+      
+      .feedback-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">🎶 TuneVibe</div>
+    <a href="/" class="back-btn">← New Recommendation</a>
+  </header>
+  
+  <div class="container">
+    <div class="context-info">
+      <h2>Recommendations for {{ context.activity }} in {{ context.city }}</h2>
+      <div class="weather-display">
+        <div class="weather-icon">
+          {% if context.weather == 'Clear' %}☀️
+          {% elif context.weather == 'Rain' %}🌧️
+          {% elif context.weather == 'Clouds' %}☁️
+          {% elif context.weather == 'Snow' %}❄️
+          {% else %}🌈{% endif %}
+        </div>
+        <div>
+          <p>{{ context.weather }} • {{ context.temp }}°C</p>
+          <p>{{ context.time }}</p>
+        </div>
+      </div>
+    </div>
+    
+    <h1>Top 5 Recommendations</h1>
+    
+    <div class="song-list">
+      {% if songs %}
+        {% for song in songs %}
+        <div class="song-card">
+          <div class="song-title">{{ song.track_name }}</div>
+          <div class="song-artist">by {{ song.artist }}</div>
+          <div class="song-meta">
+            <span>{{ song.genre }}</span>
+            <span class="popularity-stars">{{ song.popularity_stars }}</span>
+          </div>
+          
+          {% if song.spotify_embed %}
+          <iframe class="spotify-player" 
+                  src="{{ song.spotify_embed }}" 
+                  width="100%" 
+                  height="80" 
+                  frameborder="0" 
+                  allowfullscreen="" 
+                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                  loading="lazy">
+          </iframe>
+          {% endif %}
+          
+          <div class="feedback-buttons">
+            <button class="like-btn" onclick="sendFeedback('{{ song.track_name }}', '{{ song.artist }}', 'like')">
+              <span>👍</span> Like
+            </button>
+            <button class="dislike-btn" onclick="sendFeedback('{{ song.track_name }}', '{{ song.artist }}', 'dislike')">
+              <span>👎</span> Dislike
+            </button>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="no-results">
+          <p>No recommendations found. Try different parameters.</p>
+        </div>
+      {% endif %}
+    </div>
+    
+    <footer>
+      &copy; 2023 TuneVibe. Your feedback helps improve recommendations.
+    </footer>
+  </div>
+
+  <script>
+    function sendFeedback(trackName, artist, type) {
+      fetch('/feedback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          track_name: trackName,
+          artist: artist,
+          type: type
+        })
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        if(data.status === 'success') {
+          const toast = document.createElement('div');
+          toast.style.position = 'fixed';
+          toast.style.bottom = '20px';
+          toast.style.right = '20px';
+          toast.style.backgroundColor = type === 'like' ? '#4CAF50' : '#f44336';
+          toast.style.color = 'white';
+          toast.style.padding = '10px 20px';
+          toast.style.borderRadius = '5px';
+          toast.style.zIndex = '1000';
+          toast.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+          toast.textContent = type === 'like' ? '👍 Thanks for your feedback!' : '👎 We\'ll improve your recommendations!';
+          
+          document.body.appendChild(toast);
+          
+          setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transition = 'opacity 1s';
+            setTimeout(() => toast.remove(), 1000);
+          }, 2000);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    }
+  </script>
+</body>
+</html>
+
